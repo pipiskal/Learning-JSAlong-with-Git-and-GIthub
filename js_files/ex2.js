@@ -40,4 +40,5 @@ console.log(stringAge);
 
 // type coercion
 
-
+console.log("i am " + 29 + "years old");
+console.log("23" - "1" -3);
