@@ -42,3 +42,6 @@ console.log(stringAge);
 
 console.log("i am " + 29 + "years old");
 console.log("23" - "1" -3);
+
+
+// falsy values : 0 , "", null, undefined, NaN
