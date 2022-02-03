@@ -90,3 +90,38 @@ for (let i = 0; i < array1.length; i++) {
 
 // so we can use continue to conitune looping for ignore the rest of the code
 // inside the loop after the continue statement
+
+// Destructuring an array to variables
+
+let arr1 = [1, 2, 3];
+
+let [a, b, c] = arr1;
+
+console.log(a, b, c);
+
+// Destructuring assignment is a special syntax that allows
+//  us to “unpack” arrays or objects into a bunch of variables,
+//   as sometimes that’s more convenient.
+
+// Destructiring an object to variables
+
+let object1 = {
+  firstName: "spyros",
+  lastName: "kalimeris",
+  age: 29,
+};
+
+// we need to use curly braces to be able to do that
+// and the values need to have the objects key name
+// we can also take only the values that we want
+
+// so either we can do this if we want to get the first and the last name
+let { firstName, lastName } = object1;
+console.log(firstName, lastName);
+
+// or we can use the object it self to get them
+
+let firstName1 = object1.firstName;
+let lastName1 = object1.lastName;
+
+console.log(firstName1, lastName1);
