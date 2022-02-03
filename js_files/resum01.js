@@ -150,6 +150,8 @@ let testArr4 = arr2.filter((element, index) => {
   if (element > 20) return element;
 });
 
+// this is not the same , map will return every single item
+// cause it returns the same ammount of length as the passed array
 let testArr5 = arr2.map((element, index) => {
   if (element > 20) return element;
 });
@@ -157,3 +159,57 @@ let testArr5 = arr2.map((element, index) => {
 console.log(testArr4);
 
 console.log(testArr5);
+
+// a more practical example
+// lets say that we have 3 students and we have information about their birth year
+// if their age are higher than 13 they are allowed to see spiderman
+
+// we are going to create 3 objects
+// we will do this later with classes so we dont have to repeat everysingle one
+
+let student1 = {
+  firstName: "nikos",
+  lastName: "kal",
+  age: 14,
+  grade: 32,
+};
+
+let student2 = {
+  firstName: "julia",
+  lastName: "meraki",
+  age: 13,
+  grade: 18,
+};
+
+let student3 = {
+  firstName: "mark",
+  lastName: "davinson",
+  age: 12,
+  grade: 21,
+};
+
+let students = [student1, student2, student3];
+
+// so i want to create a new array filtered with students that
+// their age is is === or > 13
+
+let higherStudents = students.filter((student, index) => {
+  return student.age >= 13;
+});
+
+console.log(higherStudents);
+
+// now i want to sort the array by students grade
+// highest grade goest first as an element
+
+// sort() mutates!!! the original array
+// it also return if we want another array sorted
+
+students.sort((a, b) => (a.grade > b.grade ? 1 : -1));
+
+console.log(students);
+
+for (let item of students.entries()) {
+  console.log(typeof item);
+  console.log(item);
+}
