@@ -3,63 +3,176 @@
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
 
-// const getCountryData = function (country) {
-///////////////////////////////////////
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText("beforeend", msg);
+  countriesContainer.style.opacity = 1;
+};
 
-//OLd way of doing Asynchronous request to the server
+const renderCountry = function (data, className = "") {
+  const flag = data.flags.png;
+  const countryName = data.name.common;
+  const region = data.region;
+  const population = data.population;
 
-// function getCountryData(country) {
+  const getLanguageShortType = Object.keys(data.languages);
+  const languageKey = getLanguageShortType[0];
+
+  const language = data.languages[languageKey];
+
+  const getCurrencyArea = Object.keys(data.currencies);
+  const currencieKey = getCurrencyArea[0];
+
+  const currency = data.currencies[currencieKey].name;
+  const currencySymbol = data.currencies[currencieKey].symbol;
+
+  const html = `
+        <article class="country ${className}">
+          <img class="country__img" src=${flag} />
+          <div class="country__data">
+            <h3 class="country__name">${countryName}</h3>
+            <h4 class="country__region">${region}</h4>
+            <p class="country__row"><span>👫</span>${population}</p>
+            <p class="country__row"><span>🗣️</span>${language}</p>
+            <p class="country__row"><span>💰</span>${currency} ${currencySymbol}</p>
+          </div>
+        </article>
+  `;
+
+  countriesContainer.insertAdjacentHTML("beforeend", html);
+  countriesContainer.style.opacity = 1;
+};
+
+// OLD WAY OF DOING ASYCHRONOUS REQUESTS
+
+// const getCountryAndNeighbour = function (country) {
+//   // AJAX call country 1
+//   // we first create a request
 //   const request = new XMLHttpRequest();
-
-//   // we open the request that we want to make to a specific endpoint
+//   // we open it and specify what type it will be , POST , GET etc and the api endpoint
 //   request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
-//   // and then for the server to get it we need to sent it
-//   // this will start to work an asychronous way and it will finish when its done, when it has the data
+//   // fetching the data in the background, but we dont know when this will end so
 //   request.send();
-
-//   // but request.send wont give us the data directly
-//   // we will use an eventListener with load, so when the data is loaded from the request.send
-//   // we will run the function to get it back
+//   //we need to register a callback for the load event
+//   // when the data arrives this callback function will be called
 //   request.addEventListener("load", function () {
-//     // this in an eventListener corresponds to the object that the event is added
-//     // if it was an html element this keyword with point to that element
-//     // now it points to the request object
-
-//     // destructuring the first element of the array
+//     // is the same like request.responseText
+//     // we get a Json format and we need to convert it to js object
+//     // also using destructuring cause the object we get its the first item in an array
 //     const [data] = JSON.parse(this.responseText);
-
 //     console.log(data);
+//     // Render Country 1
+//     renderCountry(data);
 
-//     const html = `<article class="country">
-//   <img class="country__img" src="${data.flags.png}" />
-//   <div class="country__data">
-//     <h3 class="country__name">${data.name.common}</h3>
-//     <h4 class="country__region">${data.region}</h4>
-//     <p class="country__row"><span>👫</span>${(
-//       +data.population / 1000000
-//     ).toFixed(1)} people</p>
-//     <p class="country__row"><span>🗣️</span>${
-//       data.languages[Object.keys(data.languages)[0]]
-//     }</p>
-//     <p class="country__row"><span>💰</span>${
-//       data.currencies[Object.keys(data.currencies)[0]].name
-//     } ${data.currencies[Object.keys(data.currencies)[0]].symbol}</p>
-//   </div>
-// </article>`;
+//     // Get neighbour country 2
+//     const [neighbour] = data.borders;
+//     if (!neighbour) return;
 
-//     countriesContainer.insertAdjacentHTML("beforeend", html);
-//     countriesContainer.style.opacity = 1;
+//     // SECOND AJAX CALL for the neighbour country
+
+//     const request2 = new XMLHttpRequest();
+//     request2.open("GET", `https://restcountries.com/v3.1/alpha/${neighbour}`);
+//     request2.send();
+//     request2.addEventListener("load", function () {
+//       const [data2] = JSON.parse(this.responseText);
+//       console.log(data2);
+
+//       renderCountry(data2, "neighbour");
+//     });
 //   });
-// }
+// };
 
-// getCountryData("greece");
-// getCountryData("portugal");
+// // we have to ajax calls at the same time
+// // this means that we dont know exactly witch one is going to end first
+// // so if we wanted to always have a specific order we need to chain the request
+// // meaning that the one will run only if the first one is completed succesfully
+// getCountryAndNeighbour("portugal");
 
-// USING MODERN JAVASCRIPT
+// THE MODERN WAY WITH PROMISES AND ESCAPING CALLBACK HELL
 
-// the fetch function returned a promise
+//Promise is an Object that is used as a placeHolder for the future result
+// of an asynchronous operation
 
-// Cosnuming promises
+// we dont know when the server gives the data back it make take a long period of time
+// so our promise will let us know if the operation ended succesufully or failed
 
-// this will retunr a promise so we need to work with the promise to get the data
-const request = fetch(`https://restcountries.com/v3.1/name/greece`);
+// Or we can say that a promise is a container for a future value might be anything objects, arrays w/e
+
+// what we get with promises is that
+
+// 1. we no longer need to rely on events and callbacks passed into asynchronous functions to handle
+// asynchronous results
+
+// 2. instead of nesting callbacks we can escape callback hell by chaining the promises
+
+//a promise returns a promise and thats why we can chain
+
+// the promise lifeCycle
+
+// // doing a simple get request
+// const request = fetch("https://restcountries.com/v3.1/name/greece");
+// // we get a promise back with the fetch API
+// // so our data is in this promise
+// console.log(request);
+
+const getCountryData = function (country) {
+  // we assume that the promissed will be fulfilled
+  //   fetch(`https://restcountries.com/v3.1/name/${country}`)
+  //     // then method we pass a callback that will be executed when we get a result value
+  //     .then(function (response) {
+  //       // we get a ReadableStream back so we need to call the Json method on the response
+  //       // now this will be a new promise and we need to handle this as well
+  //       return response.json();
+  //     })
+  //     .then(function (returnedData) {
+  //       const [data] = returnedData;
+  //       console.log(data);
+  //     });
+  // lets reWrite this with arrow functions so it be easier to read
+
+  //flat chain of promises
+
+  //always return the promise and handle it outside
+
+  //the first callback of then method is when the fetch is successfull
+  // the second one is for the rejected
+
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Country not Found! status Code ${response.status}`);
+      }
+      response.json();
+    })
+    .then((data) => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders[0];
+      if (!neighbour) return;
+      // Country 2
+      // we return the promise so we can chain
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      renderCountry(data[0], "neighbour");
+    })
+    .catch((err) => {
+      // its called if a promised gets rejected
+      // catch also returs a promise
+      console.error(`${err}`);
+      renderError(`Something Went Wrong ! ${err.message}. Try again`);
+    })
+    .finally(() => {
+      // finally will alaways be called even if its fulfilled or rejected
+      // good for operation spinners
+    });
+};
+
+btn.addEventListener("click", function () {
+  getCountryData("germany");
+});
+
+// lets try to search for something that doenst exist
+
+getCountryData("dadadadad");
+
+//fetch rejects only when there is no internet connection
