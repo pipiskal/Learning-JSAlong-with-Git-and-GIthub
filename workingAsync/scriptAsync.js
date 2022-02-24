@@ -113,6 +113,14 @@ const renderCountry = function (data, className = "") {
 // // we get a promise back with the fetch API
 // // so our data is in this promise
 // console.log(request);
+const getJson = function (url, errorMsg) {
+  return fetch(url).then((response) => {
+    if (!response.ok) {
+      throw new Error(`${errorMsg} ${response.status}`);
+    }
+    return response.json();
+  });
+};
 
 const getCountryData = function (country) {
   // we assume that the promissed will be fulfilled
@@ -136,43 +144,56 @@ const getCountryData = function (country) {
   //the first callback of then method is when the fetch is successfull
   // the second one is for the rejected
 
-  fetch(`https://restcountries.com/v3.1/name/${country}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Country not Found! status Code ${response.status}`);
-      }
-      response.json();
-    })
+  // if we throw an error the promise will get rejected and the catch method with
+  getJson(
+    `https://restcountries.com/v3.1/name/${country}`,
+    `Couldn't find Country with name : ${country},  try again!`
+  )
     .then((data) => {
+      console.log(data);
       renderCountry(data[0]);
-      const neighbour = data[0].borders[0];
-      if (!neighbour) return;
+      let neighbour = "";
+
+      try {
+        neighbour = data[0].borders[0];
+      } catch (TypeError) {
+        neighbour = false;
+      }
+
+      if (!neighbour) {
+        throw new Error("This country has no neighbours!");
+      }
       // Country 2
       // we return the promise so we can chain
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+      return getJson(
+        `https://restcountries.com/v3.1/alpha/${neighbour}`,
+        `no neighbour for this country`
+      );
     })
-    .then((response) => response.json())
     .then((data) => {
       renderCountry(data[0], "neighbour");
     })
     .catch((err) => {
       // its called if a promised gets rejected
       // catch also returs a promise
-      console.error(`${err}`);
+      console.error(err);
       renderError(`Something Went Wrong ! ${err.message}. Try again`);
-    })
-    .finally(() => {
-      // finally will alaways be called even if its fulfilled or rejected
-      // good for operation spinners
     });
+  // .finally(() => {
+  //   // finally will alaways be called even if its fulfilled or rejected
+  //   // good for operation spinners
+  // });
 };
 
 btn.addEventListener("click", function () {
-  getCountryData("germany");
+  getCountryData("greece");
 });
 
 // lets try to search for something that doenst exist
 
-getCountryData("dadadadad");
-
 //fetch rejects only when there is no internet connection
+
+
+const whereAmI = function(){
+  
+} 
