@@ -22,7 +22,7 @@ const Player = function (firstName, lastName) {
 //1. its creates an empty object
 //2. Addds a property to the new object (__proto__)that links to the constructor functions prototype object
 //3. binds the newly created object to this and now we can refer to the object with this.
-// 4. in the end it returns the object it self, reuterns this
+// 4. in the end it returns the object it self, returns this
 
 let player1 = new Player("Spyros", "Kalimeris");
 
