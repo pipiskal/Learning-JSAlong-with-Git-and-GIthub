@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+.body {
+  background-color: #242333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
