@@ -1,12 +1,14 @@
 const form = getEl("form");
+const inputs = Array.from(document.querySelectorAll(".form-control input"));
+console.log(inputs);
 const email = getEl("email");
 const username = getEl("username");
 const password = getEl("password");
 const password2 = getEl("password2");
 
-const getEl = function (element) {
+function getEl(element) {
   return document.getElementById(element);
-};
+}
 // Show input error message
 function showError(inputElement, message) {
   const formControl = inputElement.parentElement;
@@ -105,4 +107,10 @@ form.addEventListener("submit", (event) => {
   checkLength(allFields[2], 4, 15);
   checkEmail(allFields[0]);
   checkPasswordsMatch(allFields[2], allFields[3]);
+});
+
+inputs.forEach((input) => {
+  input.addEventListener("focus", (event) => {
+    input.parentElement.className = "form-control";
+  });
 });
