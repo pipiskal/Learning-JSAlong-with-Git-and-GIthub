@@ -29,10 +29,12 @@ body {
 }
 
 .container {
-  perspective: 100px;
+  /* border: 1px solid lightblue; */
+  perspective: 120px;
 }
 
 .seat {
+  /* border: 1px solid pink; */
   background-color: #444451;
   height: 12px;
   width: 15px;
