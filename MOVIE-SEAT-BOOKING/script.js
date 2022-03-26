@@ -1,5 +1,7 @@
+// Getting all the elements from the html page that we are going to work with
+
 const container = document.querySelector(".container");
-// it will create a node list of all the items that have class seat
+// it will create a node list of all the seats that are dont have a class occupied
 const seats = document.querySelectorAll(".row .seat:not(.occupied)");
 const count = document.getElementById("count");
 const total = document.getElementById("total");
@@ -52,6 +54,7 @@ function populateUI() {
 // Movie select event
 movieSelect.addEventListener("change", (e) => {
   ticketPrice = e.target.value;
+
   // Getting the movie data and saving it to local storage
   setMovieData(e.target.selectedIndex, e.target.value);
   updateSelectedCount();
@@ -61,6 +64,7 @@ movieSelect.addEventListener("change", (e) => {
 container.addEventListener("click", (e) => {
   // gives us the exact element that is clicked in the container
   if (
+    // if the target that the user clicks is actually a seat and its not occupied
     e.target.classList.contains("seat") &&
     !e.target.classList.contains("occupied")
   ) {
