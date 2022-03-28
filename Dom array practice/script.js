@@ -81,3 +81,5 @@ doubleMoneyBtn.addEventListener("click", doubleMOney);
 showMillionariesBtn.addEventListener("click", showOnlyMillionaires);
 sumAllBtn.addEventListener("click", calculateAllWealth);
 sortByWealthBtn.addEventListener("click", sortByWealth);
+
+// Extra functionality ??
